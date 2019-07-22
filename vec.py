@@ -9,7 +9,7 @@ stop.init('stopWords/stopWordList(gen).txt')
 n_dim = 300
 
 '''
-数据预处理：
+数据预处理（二分类自动生成y版）：
            分词处理
            切分训练集和测试集
 '''
@@ -25,9 +25,35 @@ def load_file_and_processing(neg,pos):
     pos = [senToWord(i) for i in pos]
     neg = [senToWord(i) for i in neg]
 
-    # fix:这里是二分类，所以积极和消极就是确定的1和0。如果做细粒度还需要改
     y = np.concatenate((np.ones(len(pos)),np.zeros(len(neg)))) # 1是积极，0是消极
     x = np.concatenate((pos,neg))
+
+    x_train,x_test,y_train,y_test = train_test_split(x,y,test_size=0.2)
+
+    np.save('y_train.npy', y_train)
+    np.save('y_test.npy', y_test)
+
+    return x_train,x_test,y_train,y_test
+
+
+'''
+数据预处理（直接传入xy版）：
+           分词处理
+           切分训练集和测试集
+'''
+def load_file_and_processing2(x,y):
+    def senToWord(sen): # 分词+去停用词
+        sou=list(jieba.cut(sen))
+        result = []
+        for i in sou:
+            if not stop.isStopWord(i):
+                result.append(i)
+        return result
+
+    x = [senToWord(i) for i in x]
+
+    y = np.array(y)
+    x = np.array(x)
 
     x_train,x_test,y_train,y_test = train_test_split(x,y,test_size=0.2)
 

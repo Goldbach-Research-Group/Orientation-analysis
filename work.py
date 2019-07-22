@@ -70,7 +70,7 @@ def bayes_train(train_vecs,y_train,test_vecs,y_test):
 
 
 if __name__=='__main__':
-    x_train, x_test, y_train, y_test = vec.load_file_and_processing(消极列表,积极列表)
+    x_train, x_test, y_train, y_test = vec.load_file_and_processing2(x,y)
     train_vecs, test_vecs, model = vec.getWord2Vec(x_train, x_test)
     clf = svm_train(train_vecs, y_train, test_vecs, y_test)
     words_vecs=buildPredictW2v('我要好好学习',model)
