@@ -81,8 +81,6 @@ def getWord2Vec(x_train,x_test):
     return train_vecs, test_vecs, model
 
 stpwrdpath="stopWords/stopWordList(sou).txt"
-import os
-print(os.path.abspath(stpwrdpath))
 # 从文件导入停用词表
 with open(stpwrdpath, 'rb') as fp:
     stopword = fp.read().decode('gbk')  # 提用词提取
