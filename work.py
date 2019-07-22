@@ -18,14 +18,29 @@ def svm_train(train_vecs,y_train,test_vecs,y_test):
 
 
 '''
-构建待测句子向量
+构建待测句子的W2v向量
 '''
-def get_predict_vecs(sen):
-    words = jieba.cut(sen)  # jieba.lcut直接返回list
-    n_dim = 300
-    imdb_w2v =Word2Vec.load('w2v_model.pkl')
-    train_vecs = vec.build_sentence_vector(words,n_dim,imdb_w2v)
+def buildPredictW2v(sen, model):
+    allWords = jieba.cut(sen)  # jieba.lcut直接返回list
+    train_vecs = vec.buildSentenceW2v(allWords, vec.n_dim, model)
     return train_vecs
+
+'''
+构建待测句子的count向量
+'''
+def buildPredictCountVec(sen,model):
+    result = []  # 创建结果向量，model限定维数
+    for _ in range(len(model)):
+        result.append(0)
+
+    allWords = jieba.cut(sen)  # jieba.lcut直接返回list
+    keyList = list(model.keys())
+    for word in allWords:
+        if word in keyList:
+            sub=model[word]
+            result[sub]+=1
+
+    return result
 
 
 '''
@@ -56,6 +71,7 @@ def bayes_train(train_vecs,y_train,test_vecs,y_test):
 
 if __name__=='__main__':
     x_train, x_test, y_train, y_test = vec.load_file_and_processing(消极列表,积极列表)
-    train_vecs, test_vecs, _ = vec.getWord2Vec(x_train, x_test)
+    train_vecs, test_vecs, model = vec.getWord2Vec(x_train, x_test)
     clf = svm_train(train_vecs, y_train, test_vecs, y_test)
-    predict('我要好好学习',clf)
+    words_vecs=buildPredictW2v('我要好好学习',model)
+    predict(words_vecs,clf)
