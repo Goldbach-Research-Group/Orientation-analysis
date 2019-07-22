@@ -1,11 +1,5 @@
 ﻿import json
 import os
-import re
-
-# standard func
-# def func(dataToFunc):
-#		return res
-
 
 def readFile_JSON(link, filename, encoding):
     # 假设内存足够大，不考虑内存泄漏
@@ -15,7 +9,7 @@ def readFile_JSON(link, filename, encoding):
 
     # 读取出异常，多半是路径格式不对，注意转义
     # 强制文件后缀过滤，注意文件保存格式，我有洁癖
-    src = link + "\\" + filename + ".json"
+    src = link + "/" + filename + ".json"
     # print(src)
     file = open(src, "r", encoding=encoding)
     fileData = file.read()
@@ -51,7 +45,7 @@ def getFilesName(link):
     nameList = []
     for i in range(0, len(filesName)):
         # 文件夹过滤
-        if (os.path.isfile(link + "\\" + filesName[i])):
+        if (os.path.isfile(link + "/" + filesName[i])):
             temp = filesName[i].split(".")
             # 只获取[*.json]的文件名,过滤器
             if (len(temp) == 2 and temp[1] == "json"):
