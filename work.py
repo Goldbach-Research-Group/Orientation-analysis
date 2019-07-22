@@ -1,5 +1,5 @@
+import numpy as np
 from sklearn.naive_bayes import GaussianNB # 这里以高斯贝叶斯为例
-from gensim.models.word2vec import Word2Vec
 from sklearn.externals import joblib    #把数据转化为二进制
 from sklearn.svm import SVC
 import vec
@@ -40,7 +40,7 @@ def buildPredictCountVec(sen,model):
             sub=model[word]
             result[sub]+=1
 
-    return result
+    return np.array(result)
 
 
 '''
