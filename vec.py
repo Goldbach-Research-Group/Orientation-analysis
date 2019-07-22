@@ -86,6 +86,10 @@ with open(stpwrdpath, 'rb') as fp:
     stopword = fp.read().decode('gbk')  # 提用词提取
 stpwrdlst = stopword.splitlines() # 将停用词表转换为list
 
+
+'''
+计算count词向量
+'''
 def getCountVec(x_train,x_test):
     x=[' '.join(i) for i in x_train]+[' '.join(i) for i in x_test]
     # vect = CountVectorizer(stop_words=stpwrdlst) # 模型
