@@ -4,13 +4,14 @@ from sklearn.externals import joblib    #把数据转化为二进制
 from sklearn.svm import SVC
 import vec
 import jieba
+import csv
 
 
 '''
 训练SVM模型
 '''
 def svm_train(train_vecs,y_train,test_vecs,y_test):
-    clf = SVC(kernel='rbf',verbose=True)
+    clf = SVC(kernel='rbf',verbose=True,probability=True)
     clf.fit(train_vecs,y_train)
     joblib.dump(clf, 'model.pkl')
     print(clf.score(test_vecs,y_test))
@@ -49,7 +50,7 @@ def buildPredictCountVec(sen,model):
 def predict(words_vecs,clf):
     result = clf.predict(words_vecs)
     probability = clf.predict_proba(words_vecs) # 属于各个类的概率
-
+    print(probability)
     if int(result[0]) > 0.5:
         print('positive')
         return True,probability
@@ -70,8 +71,35 @@ def bayes_train(train_vecs,y_train,test_vecs,y_test):
 
 
 if __name__=='__main__':
-    x_train, x_test, y_train, y_test = vec.load_file_and_processing2(x,y)
+    link = "./data"  # 路径
+    filename = "306537777_20181231_001"  # 答案json文件名
+    encoding = "utf-8"
+    stpwrdpath = "../stopWords/stopWordList(sou).txt"  # 停用词表路径
+    analyCSVpath = "./try1/data/倾向性分析数据集.csv"  # 已评分数据集(CSV文件)路径
+
+
+    def classi(score):  # 根据评分分成四类
+        score = float(score)
+        if (score >= 0 and score < 0.25):
+            return 0
+        if (score >= 0.25 and score < 0.5):
+            return 1
+        if (score >= 0.5 and score < 0.75):
+            return 2
+        if (score >= 0.75 and score < 1):
+            return 3
+
+
+    fp2 = open(analyCSVpath, 'r', encoding=encoding)
+    analyCSV = csv.reader(fp2)
+    X = []  # 答案内容
+    y = []  # 对应评分
+    for i in analyCSV:
+        X.append(i[1])
+        y.append(classi(i[2]))
+
+    x_train, x_test, y_train, y_test = vec.load_file_and_processing2(X,y)
     train_vecs, test_vecs, model = vec.getWord2Vec(x_train, x_test)
-    clf = svm_train(train_vecs, y_train, test_vecs, y_test)
+    clf = bayes_train(train_vecs, y_train, test_vecs, y_test)
     words_vecs=buildPredictW2v('我要好好学习',model)
     predict(words_vecs,clf)
