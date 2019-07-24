@@ -14,7 +14,7 @@ def svm_train(train_vecs,y_train,test_vecs,y_test):
     clf = SVC(kernel='rbf',verbose=True,probability=True)
     clf.fit(train_vecs,y_train)
     joblib.dump(clf, 'model.pkl')
-    print(clf.score(test_vecs,y_test))
+    print('交叉验证得分',clf.score(test_vecs,y_test))
     return clf
 
 
@@ -60,7 +60,7 @@ def bayes_train(train_vecs,y_train,test_vecs,y_test):
     clf = GaussianNB()  # 默认priors=None，可用clf.set_params设置各个类标记的先验概率
     clf.fit(train_vecs,y_train)
     joblib.dump(clf, 'model.pkl')
-    print(clf.score(test_vecs, y_test))
+    print('交叉验证得分',clf.score(test_vecs, y_test))
     return clf
 
 
