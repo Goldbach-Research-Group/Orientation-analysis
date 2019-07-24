@@ -48,15 +48,9 @@ def buildPredictCountVec(sen,model):
 对单个句子进行情感分析（两个模型都能用）
 '''
 def predict(words_vecs,clf):
-    result = clf.predict(words_vecs)
     probability = clf.predict_proba(words_vecs) # 属于各个类的概率
-    print(probability)
-    if int(result[0]) > 0.5:
-        print('positive')
-        return True,probability
-    else:
-        print('negative')
-        return False,probability
+    probability = probability.tolist()[0]
+    return probability.index(max(probability)),probability
 
 
 '''
@@ -100,6 +94,7 @@ if __name__=='__main__':
 
     x_train, x_test, y_train, y_test = vec.load_file_and_processing2(X,y)
     train_vecs, test_vecs, model = vec.getWord2Vec(x_train, x_test)
-    clf = bayes_train(train_vecs, y_train, test_vecs, y_test)
-    words_vecs=buildPredictW2v('我要好好学习',model)
-    predict(words_vecs,clf)
+    clf = svm_train(train_vecs, y_train, test_vecs, y_test)
+    words_vecs = buildPredictW2v('我要好好学习',model)
+    result = predict(words_vecs,clf)
+    print(result)
