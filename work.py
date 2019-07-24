@@ -1,5 +1,5 @@
 import numpy as np
-from sklearn.naive_bayes import MultinomialNB
+from sklearn.naive_bayes import GaussianNB
 from sklearn.externals import joblib    #把数据转化为二进制
 from sklearn.svm import SVC
 import vec
@@ -41,7 +41,7 @@ def buildPredictCountVec(sen,model):
             sub=model[word]
             result[sub]+=1
 
-    return np.array(result)
+    return np.array([result])
 
 
 '''
@@ -57,7 +57,7 @@ def predict(words_vecs,clf):
 训练贝叶斯模型
 '''
 def bayes_train(train_vecs,y_train,test_vecs,y_test):
-    clf = MultinomialNB()  # 默认priors=None，可用clf.set_params设置各个类标记的先验概率
+    clf = GaussianNB()  # 默认priors=None，可用clf.set_params设置各个类标记的先验概率
     clf.fit(train_vecs,y_train)
     joblib.dump(clf, 'model.pkl')
     print('交叉验证得分',clf.score(test_vecs, y_test))
