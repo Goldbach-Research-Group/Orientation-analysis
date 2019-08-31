@@ -65,12 +65,7 @@ def bayes_train(train_vecs,y_train,test_vecs,y_test):
 
 
 if __name__=='__main__':
-    link = "./data"  # 路径
-    filename = "306537777_20181231_001"  # 答案json文件名
-    encoding = "utf-8"
-    stpwrdpath = "../stopWords/stopWordList(sou).txt"  # 停用词表路径
-    analyCSVpath = "./try1/data/倾向性分析数据集.csv"  # 已评分数据集(CSV文件)路径
-
+    analyCSVpath = "data/倾向性分析数据集.csv"  # 已评分数据集(CSV文件)路径
 
     def classi(score):  # 根据评分分成四类
         score = float(score)
@@ -84,7 +79,7 @@ if __name__=='__main__':
             return 3
 
 
-    fp2 = open(analyCSVpath, 'r', encoding=encoding)
+    fp2 = open(analyCSVpath, 'r', encoding='utf-8')
     analyCSV = csv.reader(fp2)
     X = []  # 答案内容
     y = []  # 对应评分
@@ -94,7 +89,7 @@ if __name__=='__main__':
 
     x_train, x_test, y_train, y_test = vec.load_file_and_processing2(X,y)
     train_vecs, test_vecs, model = vec.getWord2Vec(x_train, x_test)
-    clf = bayes_train(train_vecs, y_train, test_vecs, y_test)
+    clf = svm_train(train_vecs, y_train, test_vecs, y_test)
     words_vecs = buildPredictW2v('我要好好学习',model)
     result = predict(words_vecs,clf)
     print(result)
